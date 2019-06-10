@@ -11,35 +11,34 @@ import android.widget.ArrayAdapter
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
-import com.example.lab4.presenters.FragmentOnePresenter
-import com.example.lab4.views.FragmentOneIView
+import com.example.lab4.presenters.FragmentPresenter
+import com.example.lab4.views.FragmentIView
 import kotlinx.android.synthetic.main.fragment_one.*
 
-class FragmentOne() : MvpAppCompatFragment(), FragmentOneIView{
+class FragmentOne : MvpAppCompatFragment(), FragmentIView{
+
+    private val TAG = "FragmentOne"
 
     private var listener: OnListFragmentInteractionListener? = null
 
     @InjectPresenter(type = PresenterType.GLOBAL, tag = "commonPresenter")
-    lateinit var presenter : FragmentOnePresenter
+    lateinit var presenter : FragmentPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d(TAG, "onCreateView")
         // Inflate the layout for this
         return inflater.inflate(R.layout.fragment_one, container, false)
     }
-
-    private val TAG = "FragmentOne"
 
     override fun showWeather(weatherList: List<WeatherService.WeatherItem>?) {
         if (swipeLayout.isRefreshing)
             swipeLayout.isRefreshing = false
 
         Log.d(TAG, "setWeekInfo")
-        val items = ArrayList<String>()
 
+        val items = ArrayList<String>()
         for (i in 0 until weatherList!!.size step 4) {
             val temp = "  ночью " + weatherList[i].temp + "C" +  "  днём" + weatherList[i + 2].temp + "C"
             items.add(weatherList[i].date + temp)

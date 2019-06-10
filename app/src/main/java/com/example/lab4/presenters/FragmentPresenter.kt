@@ -4,11 +4,11 @@ import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.lab4.WeatherService
-import com.example.lab4.views.FragmentOneIView
+import com.example.lab4.views.FragmentIView
 
 
 @InjectViewState
-class FragmentOnePresenter: MvpPresenter<FragmentOneIView>() {
+class FragmentPresenter: MvpPresenter<FragmentIView>() {
 
     init {
         refresh()

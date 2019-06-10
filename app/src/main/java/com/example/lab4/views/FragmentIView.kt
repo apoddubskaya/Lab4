@@ -6,6 +6,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.example.lab4.WeatherService
 
 @StateStrategyType(value = AddToEndSingleStrategy::class)
-interface FragmentOneIView : MvpView {
+interface FragmentIView : MvpView {
     fun showWeather(weatherList : List<WeatherService.WeatherItem>?)
 }

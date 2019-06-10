@@ -21,7 +21,7 @@ object WeatherService {
         val humidity: String,
         val pressure: String
     )
-    var weatherList : List<WeatherItem>? = null
+    private var weatherList : List<WeatherItem>? = null
 
     interface ApiHelper {
         @GET("meteo.php")
@@ -36,7 +36,6 @@ object WeatherService {
     private fun getWeatherCall(): Call<List<WeatherItem>> {
         val retrofit = Retrofit.Builder()
             .baseUrl("http://icomms.ru/inf/")
-
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         return retrofit.create(ApiHelper::class.java).getWeatherInfo(19)
@@ -45,6 +44,7 @@ object WeatherService {
     fun getWeather(listener : OnUpdateWeatherListener) {
         val call = WeatherService.getWeatherCall()
         call.enqueue(object : Callback<List<WeatherItem>> {
+
             override fun onFailure(call: Call<List<WeatherService.WeatherItem>>, t: Throwable) {
                 listener.onFailureCallback()
             }
@@ -56,7 +56,6 @@ object WeatherService {
                 if (response.code() == 200) {
                     weatherList = response.body()!!
                     listener.onResponseCallback(weatherList)
-//                    val str: String = Gson().toJson(WeatherService.weatherList)
                 }
             }
         })

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 
 class MainActivity : AppCompatActivity(), FragmentOne.OnListFragmentInteractionListener{
 
@@ -30,12 +29,14 @@ class MainActivity : AppCompatActivity(), FragmentOne.OnListFragmentInteractionL
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.d(TAG, "onCreateActivityBegin")
-        val frag = FragmentOne()
-        Log.d(TAG, "onCreateActivityCrateFragment")
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frag1, frag)
+            .replace(R.id.frag1, FragmentOne())
             .commit()
-        Log.d(TAG, "onCreateActivityAfterCommit")
+
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frag2, FragmentTwo())
+                .commit()
+        }
     }
 }

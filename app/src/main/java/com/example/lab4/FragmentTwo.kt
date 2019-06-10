@@ -9,14 +9,14 @@ import android.widget.ArrayAdapter
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
-import com.example.lab4.presenters.FragmentOnePresenter
-import com.example.lab4.views.FragmentOneIView
+import com.example.lab4.presenters.FragmentPresenter
+import com.example.lab4.views.FragmentIView
 import kotlinx.android.synthetic.main.fragment_two.*
 
-class FragmentTwo : MvpAppCompatFragment(), FragmentOneIView {
+class FragmentTwo : MvpAppCompatFragment(), FragmentIView {
 
     @InjectPresenter(type = PresenterType.GLOBAL, tag = "commonPresenter")
-    lateinit var presenter: FragmentOnePresenter
+    lateinit var presenter: FragmentPresenter
 
     private val TAG = "FragmentTwo"
 
@@ -31,14 +31,20 @@ class FragmentTwo : MvpAppCompatFragment(), FragmentOneIView {
     }
 
     fun setPosition(position : Int) {
-        Log.d(TAG, "set pos" + position)
         this.position = position
     }
 
     override fun showWeather(weatherList: List<WeatherService.WeatherItem>?) {
         Log.d(TAG, "frag2 set " + position + " info")
         val currDayPosition = position * 4
-        val items = ArrayList<String>(listOf(weatherList!![currDayPosition].date, "\nНочь\n", "\nУтро\n", "\nДень\n", "\nВечер\n"))
+        val items = ArrayList<String>(listOf(
+            weatherList!![currDayPosition].date,
+            "\nНочь\n",
+            "\nУтро\n",
+            "\nДень\n",
+            "\nВечер\n"
+            )
+        )
 
         for (i in 0..3) {
             items[i + 1] += "\nТемпература   " + weatherList[currDayPosition + i].temp + "C"
