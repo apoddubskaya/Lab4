@@ -2,41 +2,48 @@ package com.example.lab4
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.PresenterType
+import com.example.lab4.presenters.FragmentOnePresenter
+import com.example.lab4.views.FragmentOneIView
 import kotlinx.android.synthetic.main.fragment_one.*
 
-class FragmentOne : Fragment() {
+class FragmentOne() : MvpAppCompatFragment(), FragmentOneIView{
 
     private var listener: OnListFragmentInteractionListener? = null
+
+    @InjectPresenter(type = PresenterType.GLOBAL, tag = "commonPresenter")
+    lateinit var presenter : FragmentOnePresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        Log.d(TAG, "onCreateView")
+        // Inflate the layout for this
         return inflater.inflate(R.layout.fragment_one, container, false)
     }
 
     private val TAG = "FragmentOne"
 
-    private fun setWeekInfo() {
+    override fun showWeather(weatherList: List<WeatherService.WeatherItem>?) {
+        if (swipeLayout.isRefreshing)
+            swipeLayout.isRefreshing = false
+
         Log.d(TAG, "setWeekInfo")
-        if (WeatherService.weatherList == null) {
-            Log.d(TAG, "null list data")
-            return
-        }
         val items = ArrayList<String>()
-//        for (i in 1..14)
-//            items.add(i.toString())
-        val wlist = WeatherService.weatherList!!
-        for (i in 0 until wlist.size step 4)
-            items.add(wlist[i].date)
+
+        for (i in 0 until weatherList!!.size step 4) {
+            val temp = "  ночью " + weatherList[i].temp + "C" +  "  днём" + weatherList[i + 2].temp + "C"
+            items.add(weatherList[i].date + temp)
+        }
 
         list.adapter = ArrayAdapter<String>(
             activity!!.applicationContext,
@@ -51,10 +58,14 @@ class FragmentOne : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setWeekInfo()
+        swipeLayout.setOnRefreshListener {
+            Log.d(TAG, "refreshhhhh")
+            presenter.refresh()
+        }
     }
 
     override fun onAttach(context: Context) {
+        Log.d(TAG, "onAttach")
         super.onAttach(context)
         if (context is OnListFragmentInteractionListener) {
             listener = context

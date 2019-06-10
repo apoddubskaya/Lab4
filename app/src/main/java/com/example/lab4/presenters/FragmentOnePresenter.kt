@@ -1,4 +1,31 @@
 package com.example.lab4.presenters
 
-class FragmentOnePresenter {
+import android.util.Log
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
+import com.example.lab4.WeatherService
+import com.example.lab4.views.FragmentOneIView
+
+
+@InjectViewState
+class FragmentOnePresenter: MvpPresenter<FragmentOneIView>() {
+
+    init {
+        refresh()
+    }
+
+    fun refresh() {
+        WeatherService.getWeather(object : WeatherService.OnUpdateWeatherListener {
+            override fun onFailureCallback() {
+                Log.d("presenter", "getWeather fail")
+            }
+
+            override fun onResponseCallback(weatherList: List<WeatherService.WeatherItem>?) {
+                Log.d("presenter", "getWeather success")
+                viewState.showWeather(weatherList)
+            }
+
+        })
+    }
+
 }
